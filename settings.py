@@ -10,12 +10,15 @@ SESSION_CONFIG_DEFAULTS = dict(
 )
 
 SESSION_CONFIGS = [
-    # dict(
-    #    name='public_goods',
-    #    display_name="Public Goods",
-    #    num_demo_participants=3,
-    #    app_sequence=['public_goods', 'payment_info']
-    # ),
+    dict(
+       name='nidm_experiment',
+       display_name="NIDM Experiment",
+       num_demo_participants=2,
+       app_sequence=[
+           'survey_pre',
+           'network_game'
+       ]
+    ),
 ]
 
 
@@ -24,7 +27,7 @@ SESSION_CONFIGS = [
 LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'USD'
+REAL_WORLD_CURRENCY_CODE = 'EUR'
 USE_POINTS = True
 
 ROOMS = []
@@ -35,7 +38,7 @@ ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 DEMO_PAGE_INTRO_HTML = """ """
 
-SECRET_KEY = 'czngshvn-s_f)*uyk^e*!c=j8aog9lz7ryn5#owo^kzkw344g_'
+SECRET_KEY = 'f^c@nsxps&6019h1@3$s3g9l4kmpgo%nh17$nka^(gkb%at5^#'
 
 # if an app is included in SESSION_CONFIGS, you don't need to list it here
 INSTALLED_APPS = ['otree']
