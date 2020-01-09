@@ -3,25 +3,20 @@ from ._builtin import Page, WaitPage
 from .models import Constants
 
 
-class MyPage(Page):
+class Questionnaire(Page):
+    timeout_seconds = 1
     form_model = 'player'
     form_fields = [
-        'name',
-        'age'
+        'risk_perception'
     ]
-    pass
 
+    def before_next_page(self):
+        print("risk perception: ", self.player.risk_perception)
+        self.participant.vars['risk_perception'] = self.player.risk_perception
 
-# class ResultsWaitPage(WaitPage):
-#     def after_all_players_arrive(self):
-#         pass
-
-
-class Results(Page):
     pass
 
 
 page_sequence = [
-    MyPage,
-    # ResultsWaitPage,
-    Results]
+    Questionnaire
+]

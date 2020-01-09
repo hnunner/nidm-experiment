@@ -23,6 +23,8 @@
 
         let p_id = Number(js_vars.p_id);
         let disease_states = js_vars.disease_states;
+        let risk_perceptions = js_vars.risk_perceptions;
+        let ties = js_vars.ties;
 
         // console.log("player ID: ".concat(p_id));
         // console.log("disease states: ".concat(disease_states));
@@ -30,61 +32,68 @@
         //     console.log(d)
         //     console.log(disease_states[d])
         // }
+        // console.log("risk perceptions: ".concat(risk_perceptions));
+        // for (let r in risk_perceptions) {
+        //     console.log(r)
+        //     console.log(risk_perceptions[r])
+        // }
+        // console.log("ties: ".concat(ties));
+        // for (let t in ties) {
+        //     console.log(t)
+        //     console.log(ties[t])
+        // }
 
         // create an array with nodes
         let nodes = new vis.DataSet();
         for (let d in disease_states) {
             if (disease_states.hasOwnProperty(d)) {
-            d = Number(d);
-            let ds = Number(disease_states[d]);
+                d = Number(d);
+                let ds = Number(disease_states[d]);
+                let size = Number(risk_perceptions[d])*15;
                 // node of player
                 if (d ===  p_id) {
                     // susceptible
                     if (ds === 1) {
-                        nodes.add({id: d, color: '#FECD0A', shape: 'star', size: 30})
+                        nodes.add({id: d, color: '#FECD0A', shape: 'star', size: size})
                     // infected
                     } else if (ds === 2) {
-                        nodes.add({id: d, color: '#FF5500', shape: 'star', size: 30})
+                        nodes.add({id: d, color: '#FF5500', shape: 'star', size: size})
                     // recovered
                     } else if (ds === 3) {
-                        nodes.add({id: d, color: '#56B4E9', shape: 'star', size: 30})
+                        nodes.add({id: d, color: '#56B4E9', shape: 'star', size: size})
                     } else {
-                        nodes.add({id: d, color: '#ffffff', shape: 'star', size: 30})
+                        nodes.add({id: d, color: '#ffffff', shape: 'star', size: size})
                     }
                 // nodes of other players
                 } else {
                     // susceptible
                     if (ds === 1) {
-                        nodes.add({id: d, label: d.toString(), color: '#FECD0A', shape: 'circle'})
+                        nodes.add({id: d, label: d.toString(), color: '#FECD0A', shape: 'hexagon', size: size})
                     // infected
                     } else if (ds === 2) {
-                        nodes.add({id: d, label: d.toString(), color: '#FF5500', shape: 'circle'})
+                        nodes.add({id: d, label: d.toString(), color: '#FF5500', shape: 'hexagon', size: size})
                     // recovered
                     } else if (ds === 3) {
-                        nodes.add({id: d, label: d.toString(), color: '#56B4E9', shape: 'circle'})
+                        nodes.add({id: d, label: d.toString(), color: '#56B4E9', shape: 'hexagon', size: size})
                     } else {
-                        nodes.add({id: d, label: d.toString(), color: '#ffffff', shape: 'circle'})
+                        nodes.add({id: d, label: d.toString(), color: '#ffffff', shape: 'hexagon', size: size})
                     }
                 }
             }
         }
 
-        {#for (let i = 1; i <= released.length; i++) {#}
-        {#    if (i == p_id) {#}
-        {#        nodes.add({id: i, color: '#999999', shape: 'star', size: 30})#}
-        {#    } else {#}
-        {#        nodes.add({id: i, label: i.toString(), color: '#999999', shape: 'circle'})#}
-        {#    }#}
-        //}
-
         // create an array with edges
-        let edges = new vis.DataSet([
-            {#{from: 1, to: 3},#}
-            {from: 1, to: 2},
-            {#{from: 2, to: 4},#}
-            {#{from: 2, to: 5},#}
-            {#{from: 3, to: 3}#}
-        ]);
+        let edges = new vis.DataSet();
+        for (let src in ties) {
+            if (ties.hasOwnProperty(src)) {
+                src = Number(src);
+                let ties_of_src = ties[src];
+                for (let i = 0; i < ties_of_src.length; i++) {
+                    let dest = Number(ties_of_src[i]);
+                    edges.add({from: src, to: dest});
+                }
+            }
+        }
 
         // create a network
         let container = document.getElementById('nidm_network');

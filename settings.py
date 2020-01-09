@@ -15,7 +15,7 @@ SESSION_CONFIGS = [
        display_name="NIDM Experiment",
        num_demo_participants=4,
        app_sequence=[
-           # 'survey_pre',
+           'survey_pre',
            'network_game'
        ]
     ),
