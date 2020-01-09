@@ -1,0 +1,22 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Page title
+{% endblock %}
+
+{% block content %}
+
+    Please enter the following information.
+    {% formfield player.disease_state label="What is your disease state?" %}
+
+{#    {% formfield player.male label="Are you male?" %}#}
+{#    {% formfield player.earnings label="How much money do you make in a month?" %}#}
+{#    {% formfield player.height label="What is your height?" %}#}
+{#    {% formfield player.risk_perception label="What is your risk perception?" %}#}
+{#    {% formfield player.name label="What is your name?" %}#}
+{#    {% formfield player.comments label="Any comments?" %}#}
+
+    {% next_button %}
+
+{% endblock %}
