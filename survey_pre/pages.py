@@ -13,6 +13,7 @@ class Questionnaire(Page):
     def before_next_page(self):
         print("risk perception: ", self.player.risk_perception)
         self.participant.vars['risk_perception'] = self.player.risk_perception
+        self.session.vars['disease_introduced'] = False
 
     pass
 

@@ -1,7 +1,7 @@
 from otree.api import Currency as c, currency_range
 from ._builtin import Page, WaitPage
 from .models import Constants
-import random
+from random import randint
 
 
 class ResultsWaitPage(WaitPage):
@@ -14,11 +14,18 @@ class Game(Page):
     timeout_seconds = 5
 
     def before_next_page(self):
-        self.player.change_disease_state()
-        if random.randint(1, 10) > 3:
-            self.player.connect_to(self.group.get_player_by_id(random.randint(1, len(self.group.get_players()))))
+        self.player.compute_disease_transmission()
+
+        if not self.session.vars['disease_introduced'] and self.round_number == 1:
+            random_player = self.group.get_player_by_id(randint(1, len(self.group.get_players())))
+            random_player.infect()
+            print("randomly selected player " + str(random_player.id_in_group) + " infected")
+            self.session.vars['disease_introduced'] = True
+
+        if randint(1, 10) > 3:
+            self.player.connect_to(self.group.get_player_by_id(randint(1, len(self.group.get_players()))))
         else:
-            self.player.disconnect_from(self.group.get_player_by_id(random.randint(1, len(self.group.get_players()))))
+            self.player.disconnect_from(self.group.get_player_by_id(randint(1, len(self.group.get_players()))))
 
     def js_vars(self):
         disease_states = dict()
