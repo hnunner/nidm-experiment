@@ -13,7 +13,7 @@ SESSION_CONFIGS = [
     dict(
        name='nidm_experiment',
        display_name="NIDM Experiment",
-       num_demo_participants=4,
+       num_demo_participants=2,
        app_sequence=[
            'survey_pre',
            'network_game'

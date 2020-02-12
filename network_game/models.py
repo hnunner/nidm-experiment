@@ -20,7 +20,7 @@ Your app description
 
 class Constants(BaseConstants):
     name_in_url = 'network_game'
-    players_per_group = 4
+    players_per_group = 2
     num_rounds = 10
     gamma = 0.4
     tau = 3
@@ -35,8 +35,12 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    disease_state = models.IntegerField(initial=1)
     ties = models.StringField()
+    ties_form_req = models.StringField()
+    ties_form_res = models.StringField()
+    ties_rem = models.StringField()
+
+    disease_state = models.IntegerField(initial=1)
     rounds_infected = models.IntegerField(initial=0)
 
     def get_player_with_current_settings(self):

@@ -19,7 +19,7 @@ Your app description
 
 class Constants(BaseConstants):
     name_in_url = 'survey_pre'
-    players_per_group = 4
+    players_per_group = 2
     num_rounds = 1
 
 

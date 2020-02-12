@@ -1,30 +1,58 @@
+<style>
+    .otree-body.container {
+        margin-left: 10px;
+        margin-top: -40px;
+    }
+</style>
+
 {% extends "global/Page.html" %}
 {% load otree static %}
 
 {% block title %}
-    Page title
+    Choose your network ties!
 {% endblock %}
 
 {% block content %}
 
-    <p>Your are participant {{ participant.id_in_session }}.</p>
+    <!-- p>Your are participant {{ participant.id_in_session }}.</p -->
+    <input type="hidden" name="ties_form_req" />
+    <input type="hidden" name="ties_form_res" />
+    <input type="hidden" name="ties_rem" />
+
+
+    <!--            TABLE LAYOUT            -->
+    <table>
+        <tr>
+            <td valign="top">
+                <div id="nidm_network"></div>
+            </td>
+            <td valign="top">
+                <div id="form-ties"></div>
+            </td>
+        </tr>
+    </table>
+
 
     <!--        NETWORK PRESENTATION        -->
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <style type="text/css">
         #nidm_network {
-            width: 600px;
-            height: 400px;
+            width: 800px;
+            height: 600px;
             border: 1px solid lightgray;
         }
     </style>
-    <div id="nidm_network"></div>
     <script type="text/javascript">
 
         let p_id = Number(js_vars.p_id);
+
+        let ties = js_vars.ties;
+        let ties_form_req = js_vars.ties_form_req;
+        let ties_form_res = js_vars.ties_form_res;
+        let ties_rem = js_vars.ties_rem;
+
         let disease_states = js_vars.disease_states;
         let risk_perceptions = js_vars.risk_perceptions;
-        let ties = js_vars.ties;
 
         // console.log("player ID: ".concat(p_id));
         // console.log("disease states: ".concat(disease_states));
@@ -54,29 +82,29 @@
                 if (d ===  p_id) {
                     // susceptible
                     if (ds === 1) {
-                        nodes.add({id: d, color: '#FECD0A', shape: 'star', size: size})
+                        nodes.add({id: d, color: '#FFFFFF', shape: 'star', size: size})
                     // infected
                     } else if (ds === 2) {
-                        nodes.add({id: d, color: '#FF5500', shape: 'star', size: size})
+                        nodes.add({id: d, color: '#000000', shape: 'star', size: size})
                     // recovered
                     } else if (ds === 3) {
-                        nodes.add({id: d, color: '#56B4E9', shape: 'star', size: size})
+                        nodes.add({id: d, color: '#888888', shape: 'star', size: size})
                     } else {
-                        nodes.add({id: d, color: '#ffffff', shape: 'star', size: size})
+                        nodes.add({id: d, color: '#FFFFFF', shape: 'star', size: size})
                     }
                 // nodes of other players
                 } else {
                     // susceptible
                     if (ds === 1) {
-                        nodes.add({id: d, label: d.toString(), color: '#FECD0A', shape: 'hexagon', size: size})
+                        nodes.add({id: d, label: d.toString(), color: '#FFFFFF', shape: 'hexagon', size: size})
                     // infected
                     } else if (ds === 2) {
-                        nodes.add({id: d, label: d.toString(), color: '#FF5500', shape: 'hexagon', size: size})
+                        nodes.add({id: d, label: d.toString(), color: '#000000', shape: 'hexagon', size: size})
                     // recovered
                     } else if (ds === 3) {
-                        nodes.add({id: d, label: d.toString(), color: '#56B4E9', shape: 'hexagon', size: size})
+                        nodes.add({id: d, label: d.toString(), color: '#888888', shape: 'hexagon', size: size})
                     } else {
-                        nodes.add({id: d, label: d.toString(), color: '#ffffff', shape: 'hexagon', size: size})
+                        nodes.add({id: d, label: d.toString(), color: '#FFFFFF', shape: 'hexagon', size: size})
                     }
                 }
             }
@@ -105,6 +133,141 @@
         let network = new vis.Network(container, data, options);
     </script>
 
+    <!----------------------------------------------------------------------------------->
+    <!------------------------- Form for tie formation requests ------------------------->
+    <!----------------------------------------------------------------------------------->
+
+    <script type="text/javascript">
+        function createCheckboxForm(ties, title, breaks) {
+
+            // create a form
+            let f = document.createElement("form");
+            // f.setAttribute('method', "post");
+            // f.setAttribute('action', "submit.php");
+
+            // create title
+            f.appendChild(document.createTextNode(title));
+            for (let b = 0; b < breaks; b++) {
+                f.appendChild(document.createElement("br"));
+            }
+
+            // create checkboxes
+            for (let t in ties) {
+                // checkbox id
+                let cb_id = "cb_rem_".concat(ties[t]);
+
+                // create a single checkbox
+                let cb = document.createElement("input");
+                cb.type = "checkbox";
+                cb.id = cb_id;
+                cb.name = cb_id;
+
+                // create a label for the checkbox
+                let lbl = document.createElement("Label");
+                lbl.setAttribute("for", cb_id);
+                lbl.appendChild(document.createTextNode("   ".concat(ties[t])));
+
+                // create empty label as "whitespace hack"
+                let ws = document.createTextNode("\t");
+
+                // add all elements to the form
+                f.appendChild(cb);
+                f.appendChild(ws);
+                f.appendChild(lbl);
+                f.appendChild(document.createElement("br"));
+            }
+            return f;
+        }
+
+        window.onload = function() {
+
+            let p_id = Number(js_vars.p_id);
+            let f_ties_form_req = createCheckboxForm(js_vars.ties_form_req[p_id], "Send tie formation request to:", 2);
+            let f_ties_form_res = createCheckboxForm(js_vars.ties_form_res[p_id], "Accept tie formation request from:", 2);
+            let f_ties_rem = createCheckboxForm(js_vars.ties_rem[p_id], "Break tie with:", 3);
+
+            // create a table
+            let tbl = document.createElement('table');
+            tbl.setAttribute('align', 'center');
+            tbl.setAttribute('border', '0');
+            tbl.setAttribute('cellpadding', '10');
+            tbl.setAttribute('width', '700');
+
+            let tbdy = document.createElement('tbody');
+            let tr = document.createElement('tr');
+
+            let td1 = document.createElement('td');
+            td1.setAttribute('align', 'center');
+            td1.setAttribute('valign', 'top');
+            td1.setAttribute('width', '150');
+            td1.appendChild(f_ties_form_req);
+            tr.appendChild(td1);
+
+            let td2 = document.createElement('td');
+            td2.setAttribute('align', 'center');
+            td2.setAttribute('valign', 'top');
+            td2.setAttribute('width', '150');
+            td2.appendChild(f_ties_form_res);
+            tr.appendChild(td2);
+
+            let td3 = document.createElement('td');
+            td3.setAttribute('align', 'center');
+            td3.setAttribute('valign', 'top');
+            td3.setAttribute('width', '150');
+            td3.appendChild(f_ties_rem);
+            tr.appendChild(td3);
+
+            let td4 = document.createElement('td');
+            td4.setAttribute('align', 'center');
+            td4.setAttribute('bgcolor', '#AAAAAA');
+            td4.setAttribute('padding-left', '40px');
+            td4.setAttribute('valign', 'top');
+            td4.setAttribute('width', '150');
+
+            let title_res_prev_round =  document.createTextNode("Results of last round");
+            let bold_res_title_prev_round = document.createElement('strong');
+            bold_res_title_prev_round.appendChild(title_res_prev_round);
+            td4.appendChild(bold_res_title_prev_round);
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createTextNode("Benefits of ties:"));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createTextNode("Costs of ties:"));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createTextNode("Disease penalty:"));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createTextNode("Earnings:"));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+
+            let res_average =  document.createTextNode("Average earnings per round: ");
+            let bold_res_average = document.createElement('strong');
+            bold_res_average.appendChild(res_average);
+            td4.appendChild(bold_res_average);
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+
+            let res_total =  document.createTextNode("Total earnings: ");
+            let bold_res_total = document.createElement('strong');
+            bold_res_total.appendChild(res_total);
+            td4.appendChild(bold_res_total);
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+            td4.appendChild(document.createElement('br'));
+
+            tr.appendChild(td4);
+
+            tbdy.appendChild(tr);
+            tbl.appendChild(tbdy);
+
+            // add the form inside the body
+            document.getElementById('form-ties').appendChild(tbl)
+        }
+    </script>
+
+    </br>
     {% next_button %}
 
 {% endblock %}
