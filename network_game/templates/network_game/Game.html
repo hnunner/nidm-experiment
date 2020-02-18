@@ -1,7 +1,7 @@
 <style>
     .otree-body.container {
-        margin-left: 10px;
-        margin-top: -40px;
+        margin-left: 5px;
+        margin-top: -60px;
     }
 </style>
 
@@ -9,28 +9,45 @@
 {% load otree static %}
 
 {% block title %}
-    Choose your network ties!
 {% endblock %}
 
 {% block content %}
 
     <!-- p>Your are participant {{ participant.id_in_session }}.</p -->
-    <input type="hidden" name="ties_form_req_options" />
-    <input type="hidden" name="ties_form_res_options" />
-    <input type="hidden" name="ties_rem_options" />
-    <input type="hidden" name="ties_form_req_selected" />
-    <input type="hidden" name="ties_form_res_selected" />
-    <input type="hidden" name="ties_rem_selected">
+    <input type="hidden" id="ties_form_req_options" name="ties_form_req_options" />
+    <input type="hidden" id="ties_form_res_options" name="ties_form_res_options" />
+    <input type="hidden" id="ties_rem_options" name="ties_rem_options" />
+    <input type="hidden" id="ties_form_req_selected" name="ties_form_req_selected" />
+    <input type="hidden" id="ties_form_res_selected" name="ties_form_res_selected" />
+    <input type="hidden" id="ties_rem_selected" name="ties_rem_selected">
 
 
     <!--            TABLE LAYOUT            -->
-    <table>
+    <table width="1500">
         <tr>
-            <td valign="top">
+            <th width="700" align="center" valign="top" bgcolor="#EEEEEE">
+                <h2 align="center">This is your network!</h2>
+                <hr>
+            </th>
+            <th width="350" align="center" valign="top" bgcolor="#DDDDDD">
+                <h2 align="center">Choose your action!</h2>
+                <hr>
+            </th>
+            <th width="350" align="center" valign="top" bgcolor="#EEEEEE">
+                <h2 align="center">Watch your stats!</h2>
+                <hr>
+            </th>
+        </tr>
+
+        <tr>
+            <td width="700" align="center" valign="top" bgcolor="#EEEEEE">
                 <div id="nidm_network"></div>
             </td>
-            <td valign="top">
+            <td width="350" align="center" valign="top" bgcolor="#DDDDDD">
                 <div id="form-ties"></div>
+            </td>
+            <td width="350" align="center" valign="top" bgcolor="#EEEEEE">
+                <div id="stats"></div>
             </td>
         </tr>
     </table>
@@ -40,128 +57,142 @@
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <style type="text/css">
         #nidm_network {
-            width: 800px;
-            height: 600px;
-            border: 1px solid lightgray;
+            width: 700px;
+            height: 700px;
+            border: 0px solid lightgray;
         }
     </style>
     <script type="text/javascript">
 
-        let p_id = Number(js_vars.p_id);
-        let ties = js_vars.ties;
-        let disease_states = js_vars.disease_states;
-        let risk_perceptions = js_vars.risk_perceptions;
+        function createNetwork() {
+            let p_id = Number(js_vars.p_id);
+            let ties = js_vars.ties;
+            let disease_states = js_vars.disease_states;
+            let risk_perceptions = js_vars.risk_perceptions;
 
-        // console.log("player ID: ".concat(p_id));
-        // console.log("disease states: ".concat(disease_states));
-        // for (let d in disease_states) {
-        //     console.log(d)
-        //     console.log(disease_states[d])
-        // }
-        // console.log("risk perceptions: ".concat(risk_perceptions));
-        // for (let r in risk_perceptions) {
-        //     console.log(r)
-        //     console.log(risk_perceptions[r])
-        // }
-        // console.log("ties: ".concat(ties));
-        // for (let t in ties) {
-        //     console.log(t)
-        //     console.log(ties[t])
-        // }
+            // console.log("player ID: ".concat(p_id));
+            // console.log("disease states: ".concat(disease_states));
+            // for (let d in disease_states) {
+            //     console.log(d)
+            //     console.log(disease_states[d])
+            // }
 
-        // create an array with nodes
-        let nodes = new vis.DataSet();
-        for (let d in disease_states) {
-            if (disease_states.hasOwnProperty(d)) {
-                d = Number(d);
-                let ds = Number(disease_states[d]);
-                let size = Number(risk_perceptions[d])*15;
-                // node of player
-                if (d ===  p_id) {
-                    // susceptible
-                    if (ds === 1) {
-                        nodes.add({id: d, color: '#FFFFFF', shape: 'star', size: size})
-                    // infected
-                    } else if (ds === 2) {
-                        nodes.add({id: d, color: '#000000', shape: 'star', size: size})
-                    // recovered
-                    } else if (ds === 3) {
-                        nodes.add({id: d, color: '#888888', shape: 'star', size: size})
+            // create the array with nodes
+            let nodes = new vis.DataSet();
+            for (let d in disease_states) {
+                if (disease_states.hasOwnProperty(d)) {
+                    d = Number(d);
+                    let ds = Number(disease_states[d]);
+                    let size = Number(risk_perceptions[d])*15;
+                    // node of player
+                    if (d ===  p_id) {
+                        // susceptible
+                        if (ds === 1) {
+                            nodes.add({id: d,
+                                color: '#FFFFFF',
+                                shape: 'star',
+                                size: size})
+                        // infected
+                        } else if (ds === 2) {
+                            nodes.add({id: d,
+                                color: '#000000',
+                                shape: 'star',
+                                size: size})
+                        // recovered
+                        } else if (ds === 3) {
+                            nodes.add({id: d,
+                                color: '#888888',
+                                shape: 'star',
+                                size: size})
+                        }
+                    // nodes of other players
                     } else {
-                        nodes.add({id: d, color: '#FFFFFF', shape: 'star', size: size})
-                    }
-                // nodes of other players
-                } else {
-                    // susceptible
-                    if (ds === 1) {
-                        nodes.add({id: d, label: d.toString(), color: '#FFFFFF', shape: 'hexagon', size: size})
-                    // infected
-                    } else if (ds === 2) {
-                        nodes.add({id: d, label: d.toString(), color: '#000000', shape: 'hexagon', size: size})
-                    // recovered
-                    } else if (ds === 3) {
-                        nodes.add({id: d, label: d.toString(), color: '#888888', shape: 'hexagon', size: size})
-                    } else {
-                        nodes.add({id: d, label: d.toString(), color: '#FFFFFF', shape: 'hexagon', size: size})
+                        // susceptible
+                        if (ds === 1) {
+                            nodes.add({id: d,
+                                label: d.toString(),
+                                color: '#FFFFFF',
+                                shape: 'circle',
+                                size: size,
+                                font: '14px arial black'})
+                        // infected
+                        } else if (ds === 2) {
+                            nodes.add({id: d,
+                                label: d.toString(),
+                                color: '#000000',
+                                shape: 'circle',
+                                size: size,
+                                font: '14px arial white'})
+                        // recovered
+                        } else if (ds === 3) {
+                            nodes.add({id: d,
+                                label: d.toString(),
+                                color: '#AAAAAA',
+                                shape: 'circle',
+                                size: size,
+                                font: '14px arial black'})
+                        }
                     }
                 }
             }
-        }
 
-        // create an array with edges
-        let edges = new vis.DataSet();
-        for (let src in ties) {
-            if (ties.hasOwnProperty(src)) {
-                src = Number(src);
-                let ties_of_src = ties[src];
-                for (let i = 0; i < ties_of_src.length; i++) {
-                    let dest = Number(ties_of_src[i]);
-                    edges.add({from: src, to: dest});
+            // create the array with edges
+            let edges = new vis.DataSet();
+            for (let src in ties) {
+                if (ties.hasOwnProperty(src)) {
+                    src = Number(src);
+                    let ties_of_src = ties[src];
+                    for (let i = 0; i < ties_of_src.length; i++) {
+                        let dest = Number(ties_of_src[i]);
+                        edges.add({from: src, to: dest, color: '#000000', width: 1});
+                    }
                 }
             }
+
+            // create the network
+            let container = document.getElementById('nidm_network');
+            let data = {
+                nodes: nodes,
+                edges: edges
+            };
+            let options = {};
+            let network = new vis.Network(container, data, options);
         }
 
-        // create a network
-        let container = document.getElementById('nidm_network');
-        let data = {
-            nodes: nodes,
-            edges: edges
-        };
-        let options = {};
-        let network = new vis.Network(container, data, options);
-    </script>
-
-    <!----------------------------------------------------------------------------------->
-    <!------------------------- Form for tie formation requests ------------------------->
-    <!----------------------------------------------------------------------------------->
-
-    <script type="text/javascript">
-        function createCheckboxForm(ties, title, breaks) {
+        function createCheckboxForm(ties, name_prefix) {
 
             // create a form
             let f = document.createElement("form");
-            // f.setAttribute('method', "post");
-            // f.setAttribute('action', "submit.php");
 
-            // create title
-            f.appendChild(document.createTextNode(title));
-            for (let b = 0; b < breaks; b++) {
-                f.appendChild(document.createElement("br"));
-            }
-
+            let i = 1;
             // create checkboxes
             for (let t in ties) {
                 // checkbox id
-                let cb_id = "cb_".concat(ties[t]);
+                let cb_id = name_prefix.concat(ties[t]);
 
                 // create a single checkbox
                 let cb = document.createElement("input");
                 cb.type = "checkbox";
                 cb.id = cb_id;
-                cb.name = cb_id;
+                cb.name = name_prefix;
+                cb.onchange = function setCbSelections() {
+                    let cbs = document.getElementsByName(name_prefix);
+                    let ties = [];
+                    for (let i = 0; i < cbs.length; i++) {
+                        let cb = cbs[i];
+                        if (cb.type == "checkbox") {
+                            if (cb.checked) {
+                                ties.push(cb.id.replace(name_prefix, ""));
+                            }
+                        }
+                    }
+                    document.getElementById(name_prefix.concat("_selected")).value = ties.join(",");
+                };
 
                 // create a label for the checkbox
                 let lbl = document.createElement("Label");
+                lbl.style.marginLeft = '2px';
+                lbl.style.marginRight = '25px';
                 lbl.setAttribute("for", cb_id);
                 lbl.appendChild(document.createTextNode("   ".concat(ties[t])));
 
@@ -170,94 +201,141 @@
 
                 // add all elements to the form
                 f.appendChild(cb);
-                f.appendChild(ws);
                 f.appendChild(lbl);
-                f.appendChild(document.createElement("br"));
+                if (i % 5 == 0) {
+
+
+
+
+
+                    // TODO: 1. create a table
+                    // TODO: 2. create a line with 5 cells
+                    // TODO: 3. each cell has a left (checkbox) and a left (number) div
+                    // TODO: 4. create a new line once 5 cells are added
+
+
+
+
+                    f.appendChild(document.createElement('br'));
+                }
+
+                i++;
             }
             return f;
         }
 
-        let td_ties_form_req = document.createElement('td');
-        let td_ties_form_res = document.createElement('td');
-        let td_ties_rem = document.createElement('td');
+        function createLeftDiv(title) {
+            let left_div = document.createElement('div');
+            left_div.style.float = 'left';
+            left_div.style.width = '80%';
+            left_div.appendChild(document.createTextNode(title));
+            return left_div;
+        }
 
-        window.onload = function() {
+        function createRightDiv(number) {
+            let right_div = document.createElement('div');
+            right_div.style.float = 'right';
+            right_div.style.width = '20%';
+            right_div.style.textAlign = 'right';
+            right_div.appendChild(document.createTextNode(number.toString()));
+            return right_div;
+        }
 
+        function createTieForm() {
             let p_id = Number(js_vars.p_id);
-            let f_ties_form_req_options = createCheckboxForm(js_vars.ties_form_req_options[p_id], "Send tie formation request to:", 2);
-            let f_ties_form_res_options = createCheckboxForm(js_vars.ties_form_res_options[p_id], "Accept tie formation request from:", 2);
-            let f_ties_rem_options = createCheckboxForm(js_vars.ties_rem_options[p_id], "Break tie with:", 3);
 
             // create a table
             let tbl = document.createElement('table');
             tbl.setAttribute('align', 'center');
             tbl.setAttribute('border', '0');
             tbl.setAttribute('cellpadding', '10');
-            tbl.setAttribute('width', '700');
+            tbl.setAttribute('width', '350');
 
             let tbdy = document.createElement('tbody');
             let tr = document.createElement('tr');
 
-            td_ties_form_req.setAttribute('align', 'center');
-            td_ties_form_req.setAttribute('valign', 'top');
-            td_ties_form_req.setAttribute('width', '150');
-            td_ties_form_req.appendChild(f_ties_form_req_options);
-            tr.appendChild(td_ties_form_req);
+            // tie formation requests
+            let td = document.createElement('td');
+            td.setAttribute('valign', 'top');
+            td.setAttribute('width', '350');
 
-            td_ties_form_res.setAttribute('align', 'center');
-            td_ties_form_res.setAttribute('valign', 'top');
-            td_ties_form_res.setAttribute('width', '150');
-            td_ties_form_res.appendChild(f_ties_form_res_options);
-            tr.appendChild(td_ties_form_res);
+            let title_tie_form_req =  document.createTextNode("Creat tie with");
+            let h_tie_form_req = document.createElement("H5");
+            h_tie_form_req.appendChild(title_tie_form_req);
+            td.appendChild(h_tie_form_req);
+            td.appendChild(document.createElement('hr'));
 
-            td_ties_rem.setAttribute('align', 'center');
-            td_ties_rem.setAttribute('valign', 'top');
-            td_ties_rem.setAttribute('width', '150');
-            td_ties_rem.appendChild(f_ties_rem_options);
-            tr.appendChild(td_ties_rem);
+            td.appendChild(createCheckboxForm(js_vars.ties_form_req_options[p_id], "ties_form_req"));
+            document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
 
-            let td4 = document.createElement('td');
-            td4.setAttribute('align', 'center');
-            td4.setAttribute('bgcolor', '#AAAAAA');
-            td4.setAttribute('padding-left', '40px');
-            td4.setAttribute('valign', 'top');
-            td4.setAttribute('width', '150');
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
 
-            let title_res_prev_round =  document.createTextNode("Results of last round");
-            let bold_res_title_prev_round = document.createElement('strong');
-            bold_res_title_prev_round.appendChild(title_res_prev_round);
-            td4.appendChild(bold_res_title_prev_round);
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createTextNode("Benefits of ties:"));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createTextNode("Costs of ties:"));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createTextNode("Disease penalty:"));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createTextNode("Earnings:"));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
 
-            let res_average =  document.createTextNode("Average earnings per round: ");
-            let bold_res_average = document.createElement('strong');
-            bold_res_average.appendChild(res_average);
-            td4.appendChild(bold_res_average);
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
 
-            let res_total =  document.createTextNode("Total earnings: ");
-            let bold_res_total = document.createElement('strong');
-            bold_res_total.appendChild(res_total);
-            td4.appendChild(bold_res_total);
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
-            td4.appendChild(document.createElement('br'));
 
-            tr.appendChild(td4);
+            td.appendChild(document.createElement('hr'));
+            let title_tie_form_res =  document.createTextNode("Accept tie from");
+            let h_tie_form_res = document.createElement("H5");
+            h_tie_form_res.appendChild(title_tie_form_res);
+            td.appendChild(h_tie_form_res);
+            td.appendChild(document.createElement('hr'));
 
+            td.appendChild(createCheckboxForm(js_vars.ties_form_res_options[p_id], "ties_form_res"));
+            document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];
+
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+
+
+
+            td.appendChild(document.createElement('hr'));
+            let title_tie_rem =  document.createTextNode("Remove tie with");
+            let h_tie_rem = document.createElement("H5");
+            h_tie_rem.appendChild(title_tie_rem);
+            td.appendChild(h_tie_rem);
+            td.appendChild(document.createElement('hr'));
+
+            td.appendChild(createCheckboxForm(js_vars.ties_rem_options[p_id], "ties_rem"));
+            document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];
+
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+
+            {#let td_ties_form_req = document.createElement('td');#}
+            {#td_ties_form_req.setAttribute('align', 'center');#}
+            {#td_ties_form_req.setAttribute('valign', 'top');#}
+            {#td_ties_form_req.setAttribute('width', '150');#}
+            {#let f_ties_form_req_options = createCheckboxForm(js_vars.ties_form_req_options[p_id],#}
+            {#    "Send tie formation request to:", 2, "ties_form_req");#}
+            {#td_ties_form_req.appendChild(f_ties_form_req_options);#}
+            {#tr.appendChild(td_ties_form_req);#}
+
+            {#// tie formation responses#}
+            {#let td_ties_form_res = document.createElement('td');#}
+            {#td_ties_form_res.setAttribute('align', 'center');#}
+            {#td_ties_form_res.setAttribute('valign', 'top');#}
+            {#td_ties_form_res.setAttribute('width', '150');#}
+            {#let f_ties_form_res_options = createCheckboxForm(js_vars.ties_form_res_options[p_id],#}
+            {#    "Accept tie formation request from:", 2, "ties_form_res");#}
+            {#td_ties_form_res.appendChild(f_ties_form_res_options);#}
+            {#tr.appendChild(td_ties_form_res);#}
+            {#document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];#}
+            {##}
+            {#// tie removals#}
+            {#let td_ties_rem = document.createElement('td');#}
+            {#td_ties_rem.setAttribute('align', 'center');#}
+            {#td_ties_rem.setAttribute('valign', 'top');#}
+            {#td_ties_rem.setAttribute('width', '150');#}
+            {#let f_ties_rem_options = createCheckboxForm(js_vars.ties_rem_options[p_id],#}
+            {#    "Break tie with:", 3, "ties_rem");#}
+            {#td_ties_rem.appendChild(f_ties_rem_options);#}
+            {#tr.appendChild(td_ties_rem);#}
+            {#document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];#}
+
+            tr.appendChild(td);
             tbdy.appendChild(tr);
             tbl.appendChild(tbdy);
 
@@ -265,41 +343,130 @@
             document.getElementById('form-ties').appendChild(tbl);
         }
 
-        function isCheckbox (element) {
-            return element instanceof HTMLInputElement && element.getAttribute('type') == 'checkbox';
+        function createStats() {
+            // create a table
+            let tbl = document.createElement('table');
+            tbl.setAttribute('align', 'center');
+            tbl.setAttribute('border', '0');
+            tbl.setAttribute('cellpadding', '10');
+            tbl.setAttribute('width', '350');
+
+            let tbdy = document.createElement('tbody');
+            let tr = document.createElement('tr');
+
+            // stats
+            let td = document.createElement('td');
+            td.setAttribute('valign', 'top');
+            td.setAttribute('width', '350');
+
+            let title_stats =  document.createTextNode("Network overview");
+            let h_stats = document.createElement("H5");
+            h_stats.appendChild(title_stats);
+            td.appendChild(h_stats);
+            td.appendChild(document.createElement('hr'));
+
+            td.appendChild(createLeftDiv("# of ties:"));
+            let no_ties = 7;
+            td.appendChild(createRightDiv(no_ties));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("# of closed triads:"));
+            let closed_triads = 100;
+            td.appendChild(createRightDiv(closed_triads));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("# of open triads:"));
+            let open_triads = 15;
+            td.appendChild(createRightDiv(open_triads));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('hr'));
+
+            let title_changes =  document.createTextNode("Network changes");
+            let h_changes = document.createElement("H5");
+            h_changes.appendChild(title_changes);
+            td.appendChild(h_changes);
+            td.appendChild(document.createElement('hr'));
+
+            td.appendChild(createLeftDiv("Accepted requests:"));
+            let acc_reqs = [2,3,4,5].join(",");
+            td.appendChild(createRightDiv(acc_reqs));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("Declined requests:"));
+            let dec_reqs = [5,12,23].join(",");
+            td.appendChild(createRightDiv(dec_reqs));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("Broken ties:"));
+            let broken_ties = [14].join(",");
+            td.appendChild(createRightDiv(broken_ties));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('hr'));
+
+            let title_earnings =  document.createTextNode("Earnings");
+            let h_earnings = document.createElement("H5");
+            h_earnings.appendChild(title_earnings);
+            td.appendChild(h_earnings);
+            td.appendChild(document.createElement('hr'));
+
+            td.appendChild(createLeftDiv("Last round:"));
+            let earn_last_round = Math.round(12.2).toFixed(2);
+            td.appendChild(createRightDiv(earn_last_round));
+
+            let span = document.createElement('span');
+            span.style.fontSize = "12px";
+            span.appendChild(document.createElement('br'));
+            span.appendChild(document.createElement('br'));
+
+            span.appendChild(createLeftDiv("• Benefits of ties:"));
+            let ben_last_round = Math.round(16.2).toFixed(2);
+            span.appendChild(createRightDiv(ben_last_round));
+            span.appendChild(document.createElement('br'));
+
+            span.appendChild(createLeftDiv("• Costs of ties:"));
+            let costs_last_round = Math.round(4.2).toFixed(2);
+            span.appendChild(createRightDiv(costs_last_round));
+            span.appendChild(document.createElement('br'));
+
+            span.appendChild(createLeftDiv("• Disease penalty:"));
+            let dis_pen_last_round = Math.round(0.0).toFixed(2);
+            span.appendChild(createRightDiv(dis_pen_last_round));
+            td.appendChild(span);
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("Average (round):"));
+            let res_average = Math.round(12.2).toFixed(2);
+            td.appendChild(createRightDiv(res_average));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+
+            td.appendChild(createLeftDiv("Total:"));
+            let res_total = Math.round(12.2).toFixed(2);
+            td.appendChild(createRightDiv(res_total));
+            td.appendChild(document.createElement('br'));
+
+            tr.appendChild(td);
+
+            tbdy.appendChild(tr);
+            tbl.appendChild(tbdy);
+
+            // add the form inside the body
+            document.getElementById('stats').appendChild(tbl);
         }
 
-        window.onunload = function () {
-
-            let p_id = Number(js_vars.p_id);
-
-            let cbs_ties_form_req = td_ties_form_req.childNodes[0].childNodes;
-            for (let cb in cbs_ties_form_req) {
-                if (isCheckbox(cb)) {
-                    if (cb.checked) {
-                        js_vars.ties_form_req_selected[p_id].concat(cb.name);
-                    }
-                }
-            }
-
-            let cbs_ties_form_res = td_ties_form_res.childNodes[0].childNodes;
-            for (let cb in cbs_ties_form_res) {
-                if (isCheckbox(cb)) {
-                    if (cb.checked) {
-                        js_vars.ties_form_res_selected[p_id].concat(cb.name);
-                    }
-                }
-            }
-
-            let cbs_ties_rem = td_ties_rem.childNodes[0].childNodes;
-            for (let cb in cbs_ties_rem) {
-                if (isCheckbox(cb)) {
-                    if (cb.checked) {
-                        js_vars.ties_rem_selected[p_id].concat(cb.name);
-                    }
-                }
-            }
-
+        window.onload = function() {
+            createNetwork();
+            createTieForm();
+            createStats();
         }
     </script>
 

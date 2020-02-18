@@ -40,9 +40,6 @@ class Game(Page):
         ties_form_req_options = dict()
         ties_form_res_options = dict()
         ties_rem_options = dict()
-        ties_form_req_selected = dict()
-        ties_form_res_selected = dict()
-        ties_rem_selected = dict()
 
         disease_states = dict()
         risk_perceptions = dict()
@@ -81,7 +78,8 @@ class Game(Page):
             # else:
             #     ties_rem_options[player.id_in_group] = p.ties_rem_options.split()
             if player.id_in_group == 1:
-                ties_rem_options[player.id_in_group] = "1 2 3 4 5".split()
+                ties_rem_options[player.id_in_group] = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 " \
+                                                       "16 17 18 19 20 21 22 23".split()
             else:
                 ties_rem_options[player.id_in_group] = "3 5".split()
 
@@ -94,9 +92,6 @@ class Game(Page):
             ties_form_req_options=ties_form_req_options,
             ties_form_res_options=ties_form_res_options,
             ties_rem_options=ties_rem_options,
-            ties_form_req_selected=ties_form_req_selected,
-            ties_form_res_selected=ties_form_res_selected,
-            ties_rem_selected=ties_rem_selected,
             disease_states=disease_states,
             risk_perceptions=risk_perceptions
         )
