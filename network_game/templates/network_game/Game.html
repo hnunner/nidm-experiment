@@ -15,9 +15,12 @@
 {% block content %}
 
     <!-- p>Your are participant {{ participant.id_in_session }}.</p -->
-    <input type="hidden" name="ties_form_req" />
-    <input type="hidden" name="ties_form_res" />
-    <input type="hidden" name="ties_rem" />
+    <input type="hidden" name="ties_form_req_options" />
+    <input type="hidden" name="ties_form_res_options" />
+    <input type="hidden" name="ties_rem_options" />
+    <input type="hidden" name="ties_form_req_selected" />
+    <input type="hidden" name="ties_form_res_selected" />
+    <input type="hidden" name="ties_rem_selected">
 
 
     <!--            TABLE LAYOUT            -->
@@ -45,12 +48,7 @@
     <script type="text/javascript">
 
         let p_id = Number(js_vars.p_id);
-
         let ties = js_vars.ties;
-        let ties_form_req = js_vars.ties_form_req;
-        let ties_form_res = js_vars.ties_form_res;
-        let ties_rem = js_vars.ties_rem;
-
         let disease_states = js_vars.disease_states;
         let risk_perceptions = js_vars.risk_perceptions;
 
@@ -154,7 +152,7 @@
             // create checkboxes
             for (let t in ties) {
                 // checkbox id
-                let cb_id = "cb_rem_".concat(ties[t]);
+                let cb_id = "cb_".concat(ties[t]);
 
                 // create a single checkbox
                 let cb = document.createElement("input");
@@ -179,12 +177,16 @@
             return f;
         }
 
+        let td_ties_form_req = document.createElement('td');
+        let td_ties_form_res = document.createElement('td');
+        let td_ties_rem = document.createElement('td');
+
         window.onload = function() {
 
             let p_id = Number(js_vars.p_id);
-            let f_ties_form_req = createCheckboxForm(js_vars.ties_form_req[p_id], "Send tie formation request to:", 2);
-            let f_ties_form_res = createCheckboxForm(js_vars.ties_form_res[p_id], "Accept tie formation request from:", 2);
-            let f_ties_rem = createCheckboxForm(js_vars.ties_rem[p_id], "Break tie with:", 3);
+            let f_ties_form_req_options = createCheckboxForm(js_vars.ties_form_req_options[p_id], "Send tie formation request to:", 2);
+            let f_ties_form_res_options = createCheckboxForm(js_vars.ties_form_res_options[p_id], "Accept tie formation request from:", 2);
+            let f_ties_rem_options = createCheckboxForm(js_vars.ties_rem_options[p_id], "Break tie with:", 3);
 
             // create a table
             let tbl = document.createElement('table');
@@ -196,26 +198,23 @@
             let tbdy = document.createElement('tbody');
             let tr = document.createElement('tr');
 
-            let td1 = document.createElement('td');
-            td1.setAttribute('align', 'center');
-            td1.setAttribute('valign', 'top');
-            td1.setAttribute('width', '150');
-            td1.appendChild(f_ties_form_req);
-            tr.appendChild(td1);
+            td_ties_form_req.setAttribute('align', 'center');
+            td_ties_form_req.setAttribute('valign', 'top');
+            td_ties_form_req.setAttribute('width', '150');
+            td_ties_form_req.appendChild(f_ties_form_req_options);
+            tr.appendChild(td_ties_form_req);
 
-            let td2 = document.createElement('td');
-            td2.setAttribute('align', 'center');
-            td2.setAttribute('valign', 'top');
-            td2.setAttribute('width', '150');
-            td2.appendChild(f_ties_form_res);
-            tr.appendChild(td2);
+            td_ties_form_res.setAttribute('align', 'center');
+            td_ties_form_res.setAttribute('valign', 'top');
+            td_ties_form_res.setAttribute('width', '150');
+            td_ties_form_res.appendChild(f_ties_form_res_options);
+            tr.appendChild(td_ties_form_res);
 
-            let td3 = document.createElement('td');
-            td3.setAttribute('align', 'center');
-            td3.setAttribute('valign', 'top');
-            td3.setAttribute('width', '150');
-            td3.appendChild(f_ties_rem);
-            tr.appendChild(td3);
+            td_ties_rem.setAttribute('align', 'center');
+            td_ties_rem.setAttribute('valign', 'top');
+            td_ties_rem.setAttribute('width', '150');
+            td_ties_rem.appendChild(f_ties_rem_options);
+            tr.appendChild(td_ties_rem);
 
             let td4 = document.createElement('td');
             td4.setAttribute('align', 'center');
@@ -263,11 +262,55 @@
             tbl.appendChild(tbdy);
 
             // add the form inside the body
-            document.getElementById('form-ties').appendChild(tbl)
+            document.getElementById('form-ties').appendChild(tbl);
+        }
+
+        function isCheckbox (element) {
+            return element instanceof HTMLInputElement && element.getAttribute('type') == 'checkbox';
+        }
+
+        window.onunload = function () {
+
+            let p_id = Number(js_vars.p_id);
+
+            let cbs_ties_form_req = td_ties_form_req.childNodes[0].childNodes;
+            for (let cb in cbs_ties_form_req) {
+                if (isCheckbox(cb)) {
+                    if (cb.checked) {
+                        js_vars.ties_form_req_selected[p_id].concat(cb.name);
+                    }
+                }
+            }
+
+            let cbs_ties_form_res = td_ties_form_res.childNodes[0].childNodes;
+            for (let cb in cbs_ties_form_res) {
+                if (isCheckbox(cb)) {
+                    if (cb.checked) {
+                        js_vars.ties_form_res_selected[p_id].concat(cb.name);
+                    }
+                }
+            }
+
+            let cbs_ties_rem = td_ties_rem.childNodes[0].childNodes;
+            for (let cb in cbs_ties_rem) {
+                if (isCheckbox(cb)) {
+                    if (cb.checked) {
+                        js_vars.ties_rem_selected[p_id].concat(cb.name);
+                    }
+                }
+            }
+
         }
     </script>
 
-    </br>
+    {{ form.ties_form_req_options.errors }}
+    {{ form.ties_form_res_options.errors }}
+    {{ form.ties_rem_options.errors }}
+    {{ form.ties_form_req_selected.errors }}
+    {{ form.ties_form_res_selected.errors }}
+    {{ form.ties_rem_selected.errors }}
+
+    <br>
     {% next_button %}
 
 {% endblock %}

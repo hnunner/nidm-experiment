@@ -36,9 +36,12 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     ties = models.StringField()
-    ties_form_req = models.StringField()
-    ties_form_res = models.StringField()
-    ties_rem = models.StringField()
+    ties_form_req_options = models.StringField(blank=True)
+    ties_form_res_options = models.StringField(blank=True)
+    ties_rem_options = models.StringField(blank=True)
+    ties_form_req_selected = models.StringField(blank=True)
+    ties_form_res_selected = models.StringField(blank=True)
+    ties_rem_selected = models.StringField(blank=True)
 
     disease_state = models.IntegerField(initial=1)
     rounds_infected = models.IntegerField(initial=0)
