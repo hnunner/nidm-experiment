@@ -175,7 +175,7 @@
             let network = new vis.Network(container, data, options);
         }
 
-        function createLeftDiv(title) {
+        function createLeftTextDiv(title) {
             let left_div = document.createElement('div');
             left_div.style.float = 'left';
             left_div.style.width = '80%';
@@ -183,7 +183,7 @@
             return left_div;
         }
 
-        function createRightDiv(number) {
+        function createRightNumberDiv(number) {
             let right_div = document.createElement('div');
             right_div.style.float = 'right';
             right_div.style.width = '20%';
@@ -192,13 +192,40 @@
             return right_div;
         }
 
+        function createLeftObjectDiv(obj) {
+            let left_div = document.createElement('div');
+            left_div.style.float = 'left';
+            left_div.style.width = '50%';
+            left_div.appendChild(obj);
+            return left_div;
+        }
+
+        function createRightObjectDiv(obj) {
+            let right_div = document.createElement('div');
+            right_div.style.float = 'right';
+            right_div.style.width = '50%';
+            right_div.style.textAlign = 'right';
+            right_div.style.alignContent = 'right';
+            right_div.appendChild(obj);
+            return right_div;
+        }
+
         function createCheckboxForm(ties, name_prefix) {
 
-            // create a form
-            let f = document.createElement("form");
+            // create a table and general layout
+            let tbl = document.createElement('table');
+            tbl.setAttribute('align', 'center');
+            tbl.setAttribute('border', '0');
+            tbl.setAttribute('width', '300');
+            let tbdy = document.createElement('tbody');
+            let tr = document.createElement('tr');
 
             // create checkboxes
             for (let i = 1; i <= 24; i++) {
+
+                let td = document.createElement('td');
+                td.setAttribute('valign', 'center');
+                td.setAttribute('align', 'center');
 
                 // checkbox id
                 let cb_id = name_prefix.concat(i.toString());
@@ -227,81 +254,84 @@
                 let lbl = document.createElement("Label");
                 lbl.style.marginLeft = '2px';
                 lbl.style.marginRight = '25px';
+                lbl.style.textAlign = 'right';
+                lbl.style.alignContent = 'right';
+                lbl.style.alignItems = 'right';
                 lbl.setAttribute("for", cb_id);
-                lbl.appendChild(document.createTextNode("   ".concat(i.toString())));
+                lbl.appendChild(document.createTextNode(i.toString()));
                 let span = document.createElement('span');
                 if (!ties.includes(i.toString())) {
-                    span.style.color = "#CCCCCC";
+                    span.style.color = "#CFCFCF";
                 }
+                span.style.alignItems = 'right';
+                span.style.textAlign = 'right';
+                span.style.alignContent = 'right';
                 span.appendChild(lbl);
 
-                // add all elements to the form
-                f.appendChild(cb);
-                f.appendChild(span);
+
+                // add all elements
+                td.appendChild(createLeftObjectDiv(cb));
+                td.appendChild(createRightObjectDiv(span));
+                tr.appendChild(td);
 
                 if (i % 5 == 0) {
-                    f.appendChild(document.createElement('br'));
+                    tbdy.appendChild(tr);
+                    tr = document.createElement('tr');
                 }
             }
-            return f;
+            tbdy.appendChild(tr);
+
+            // final assembly
+            tbl.appendChild(tbdy);
+
+            return tbl;
         }
 
         function createTieForm() {
             let p_id = Number(js_vars.p_id);
 
-            // create a table
+            // create a table and general layout
             let tbl = document.createElement('table');
             tbl.setAttribute('align', 'center');
             tbl.setAttribute('border', '0');
             tbl.setAttribute('cellpadding', '10');
             tbl.setAttribute('width', '350');
-
             let tbdy = document.createElement('tbody');
             let tr = document.createElement('tr');
-
-            // tie formation requests
             let td = document.createElement('td');
             td.setAttribute('valign', 'top');
             td.setAttribute('width', '350');
 
-            let title_tie_form_req =  document.createTextNode("Creat tie with");
+            // tie creation requests
+            let title_tie_form_req =  document.createTextNode("Create tie with");
             let h_tie_form_req = document.createElement("H5");
             h_tie_form_req.appendChild(title_tie_form_req);
             td.appendChild(h_tie_form_req);
             td.appendChild(document.createElement('hr'));
-
             td.appendChild(createCheckboxForm(js_vars.ties_form_req_options[p_id], "ties_form_req"));
             document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
-
-
-
-
-
             td.appendChild(document.createElement('hr'));
+
+            // tie creation responses
             let title_tie_form_res =  document.createTextNode("Accept tie from");
             let h_tie_form_res = document.createElement("H5");
             h_tie_form_res.appendChild(title_tie_form_res);
             td.appendChild(h_tie_form_res);
             td.appendChild(document.createElement('hr'));
-
             td.appendChild(createCheckboxForm(js_vars.ties_form_res_options[p_id], "ties_form_res"));
             document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];
-
-
-
-
-
             td.appendChild(document.createElement('hr'));
+
+            // tie removals
             let title_tie_rem =  document.createTextNode("Remove tie with");
             let h_tie_rem = document.createElement("H5");
             h_tie_rem.appendChild(title_tie_rem);
             td.appendChild(h_tie_rem);
             td.appendChild(document.createElement('hr'));
-
             td.appendChild(createCheckboxForm(js_vars.ties_rem_options[p_id], "ties_rem"));
             document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];
 
-
+            // final assembly
             tr.appendChild(td);
             tbdy.appendChild(tr);
             tbl.appendChild(tbdy);
@@ -311,118 +341,116 @@
         }
 
         function createStats() {
-            // create a table
+
+            // create a table and general layout
             let tbl = document.createElement('table');
             tbl.setAttribute('align', 'center');
             tbl.setAttribute('border', '0');
             tbl.setAttribute('cellpadding', '10');
             tbl.setAttribute('width', '350');
-
             let tbdy = document.createElement('tbody');
             let tr = document.createElement('tr');
-
-            // stats
             let td = document.createElement('td');
             td.setAttribute('valign', 'top');
             td.setAttribute('width', '350');
 
-            let title_stats =  document.createTextNode("Network overview");
+            // connections
+            let title_stats =  document.createTextNode("Connections");
             let h_stats = document.createElement("H5");
             h_stats.appendChild(title_stats);
             td.appendChild(h_stats);
             td.appendChild(document.createElement('hr'));
-
-            td.appendChild(createLeftDiv("# of ties:"));
+            // number of ties
+            td.appendChild(createLeftTextDiv("Number of ties:"));
             let no_ties = 7;
-            td.appendChild(createRightDiv(no_ties));
+            td.appendChild(createRightNumberDiv(no_ties));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("# of closed triads:"));
+            // number of closed triads
+            td.appendChild(createLeftTextDiv("Number of closed triads:"));
             let closed_triads = 100;
-            td.appendChild(createRightDiv(closed_triads));
+            td.appendChild(createRightNumberDiv(closed_triads));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("# of open triads:"));
+            // number of open triads
+            td.appendChild(createLeftTextDiv("Number of open triads:"));
             let open_triads = 15;
-            td.appendChild(createRightDiv(open_triads));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
+            td.appendChild(createRightNumberDiv(open_triads));
+            let p1 = document.createElement('p');
+            p1.style.margin = '84px';
+            td.appendChild(p1);
             td.appendChild(document.createElement('hr'));
 
-            let title_changes =  document.createTextNode("Network changes");
+            // changes to the last round
+            let title_changes =  document.createTextNode("Changes to the last round");
             let h_changes = document.createElement("H5");
             h_changes.appendChild(title_changes);
             td.appendChild(h_changes);
             td.appendChild(document.createElement('hr'));
-
-            td.appendChild(createLeftDiv("Accepted requests:"));
+            // accepted requests
+            td.appendChild(createLeftTextDiv("Requests accepted by others:"));
             let acc_reqs = [2,3,4,5].join(",");
-            td.appendChild(createRightDiv(acc_reqs));
+            td.appendChild(createRightNumberDiv(acc_reqs));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("Declined requests:"));
+            // declined requests
+            td.appendChild(createLeftTextDiv("Requests declined by others:"));
             let dec_reqs = [5,12,23].join(",");
-            td.appendChild(createRightDiv(dec_reqs));
+            td.appendChild(createRightNumberDiv(dec_reqs));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("Broken ties:"));
+            // broken ties
+            td.appendChild(createLeftTextDiv("Ties broken by others:"));
             let broken_ties = [14].join(",");
-            td.appendChild(createRightDiv(broken_ties));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
+            td.appendChild(createRightNumberDiv(broken_ties));
+            let p2 = document.createElement('p');
+            p2.style.margin = '84px';
+            td.appendChild(p2);
             td.appendChild(document.createElement('hr'));
 
+            // earnings
             let title_earnings =  document.createTextNode("Earnings");
             let h_earnings = document.createElement("H5");
             h_earnings.appendChild(title_earnings);
             td.appendChild(h_earnings);
             td.appendChild(document.createElement('hr'));
-
-            td.appendChild(createLeftDiv("Last round:"));
+            // last round
+            td.appendChild(createLeftTextDiv("Last round:"));
             let earn_last_round = Math.round(12.2).toFixed(2);
-            td.appendChild(createRightDiv(earn_last_round));
-
+            td.appendChild(createRightNumberDiv(earn_last_round));
+            // last round details
             let span = document.createElement('span');
             span.style.fontSize = "12px";
             span.appendChild(document.createElement('br'));
             span.appendChild(document.createElement('br'));
-
-            span.appendChild(createLeftDiv("• Benefits of ties:"));
+            span.appendChild(createLeftTextDiv("• Benefits of ties:"));
             let ben_last_round = Math.round(16.2).toFixed(2);
-            span.appendChild(createRightDiv(ben_last_round));
+            span.appendChild(createRightNumberDiv(ben_last_round));
             span.appendChild(document.createElement('br'));
-
-            span.appendChild(createLeftDiv("• Costs of ties:"));
+            span.appendChild(createLeftTextDiv("• Costs of ties:"));
             let costs_last_round = Math.round(4.2).toFixed(2);
-            span.appendChild(createRightDiv(costs_last_round));
+            span.appendChild(createRightNumberDiv(costs_last_round));
             span.appendChild(document.createElement('br'));
-
-            span.appendChild(createLeftDiv("• Disease penalty:"));
+            span.appendChild(createLeftTextDiv("• Disease penalty:"));
             let dis_pen_last_round = Math.round(0.0).toFixed(2);
-            span.appendChild(createRightDiv(dis_pen_last_round));
+            span.appendChild(createRightNumberDiv(dis_pen_last_round));
             td.appendChild(span);
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("Average (round):"));
+            // average per round
+            td.appendChild(createLeftTextDiv("Average per round:"));
             let res_average = Math.round(12.2).toFixed(2);
-            td.appendChild(createRightDiv(res_average));
+            td.appendChild(createRightNumberDiv(res_average));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-            td.appendChild(createLeftDiv("Total:"));
+            // Total
+            td.appendChild(createLeftTextDiv("Total:"));
             let res_total = Math.round(12.2).toFixed(2);
-            td.appendChild(createRightDiv(res_total));
+            td.appendChild(createRightNumberDiv(res_total));
             td.appendChild(document.createElement('br'));
 
+            // final assemply
             tr.appendChild(td);
-
             tbdy.appendChild(tr);
             tbl.appendChild(tbdy);
 
@@ -430,6 +458,7 @@
             document.getElementById('stats').appendChild(tbl);
         }
 
+        // initializations when page is loaded
         window.onload = function() {
             createNetwork();
             createTieForm();
