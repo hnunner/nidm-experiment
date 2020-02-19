@@ -175,6 +175,23 @@
             let network = new vis.Network(container, data, options);
         }
 
+        function createLeftDiv(title) {
+            let left_div = document.createElement('div');
+            left_div.style.float = 'left';
+            left_div.style.width = '80%';
+            left_div.appendChild(document.createTextNode(title));
+            return left_div;
+        }
+
+        function createRightDiv(number) {
+            let right_div = document.createElement('div');
+            right_div.style.float = 'right';
+            right_div.style.width = '20%';
+            right_div.style.textAlign = 'right';
+            right_div.appendChild(document.createTextNode(number.toString()));
+            return right_div;
+        }
+
         function createCheckboxForm(ties, name_prefix) {
 
             // create a form
@@ -219,26 +236,13 @@
                 f.appendChild(cb);
                 f.appendChild(lbl);
 
+                if (i % 5 == 0) {
+                    f.appendChild(document.createElement('br'));
+                }
+
                 i++;
             }
             return f;
-        }
-
-        function createLeftDiv(title) {
-            let left_div = document.createElement('div');
-            left_div.style.float = 'left';
-            left_div.style.width = '80%';
-            left_div.appendChild(document.createTextNode(title));
-            return left_div;
-        }
-
-        function createRightDiv(number) {
-            let right_div = document.createElement('div');
-            right_div.style.float = 'right';
-            right_div.style.width = '20%';
-            right_div.style.textAlign = 'right';
-            right_div.appendChild(document.createTextNode(number.toString()));
-            return right_div;
         }
 
         function createTieForm() {
