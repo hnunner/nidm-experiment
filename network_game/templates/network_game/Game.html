@@ -41,7 +41,7 @@
 
         <tr>
             <td width="700" align="center" valign="top" bgcolor="#EEEEEE">
-                <div id="nidm_network"></div>
+                <div id="nidm-network"></div>
             </td>
             <td width="350" align="center" valign="top" bgcolor="#DDDDDD">
                 <div id="form-ties"></div>
@@ -55,6 +55,7 @@
 
     <!--        NETWORK PRESENTATION        -->
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script -->
     <style type="text/css">
         #nidm_network {
             width: 700px;
@@ -150,7 +151,7 @@
             }
 
             // create the network
-            let container = document.getElementById('nidm_network');
+            let container = document.getElementById('nidm-network');
             let data = {
                 nodes: nodes,
                 edges: edges
@@ -202,22 +203,6 @@
                 // add all elements to the form
                 f.appendChild(cb);
                 f.appendChild(lbl);
-                if (i % 5 == 0) {
-
-
-
-
-
-                    // TODO: 1. create a table
-                    // TODO: 2. create a line with 5 cells
-                    // TODO: 3. each cell has a left (checkbox) and a left (number) div
-                    // TODO: 4. create a new line once 5 cells are added
-
-
-
-
-                    f.appendChild(document.createElement('br'));
-                }
 
                 i++;
             }
@@ -302,38 +287,6 @@
 
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-
-
-            {#let td_ties_form_req = document.createElement('td');#}
-            {#td_ties_form_req.setAttribute('align', 'center');#}
-            {#td_ties_form_req.setAttribute('valign', 'top');#}
-            {#td_ties_form_req.setAttribute('width', '150');#}
-            {#let f_ties_form_req_options = createCheckboxForm(js_vars.ties_form_req_options[p_id],#}
-            {#    "Send tie formation request to:", 2, "ties_form_req");#}
-            {#td_ties_form_req.appendChild(f_ties_form_req_options);#}
-            {#tr.appendChild(td_ties_form_req);#}
-
-            {#// tie formation responses#}
-            {#let td_ties_form_res = document.createElement('td');#}
-            {#td_ties_form_res.setAttribute('align', 'center');#}
-            {#td_ties_form_res.setAttribute('valign', 'top');#}
-            {#td_ties_form_res.setAttribute('width', '150');#}
-            {#let f_ties_form_res_options = createCheckboxForm(js_vars.ties_form_res_options[p_id],#}
-            {#    "Accept tie formation request from:", 2, "ties_form_res");#}
-            {#td_ties_form_res.appendChild(f_ties_form_res_options);#}
-            {#tr.appendChild(td_ties_form_res);#}
-            {#document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];#}
-            {##}
-            {#// tie removals#}
-            {#let td_ties_rem = document.createElement('td');#}
-            {#td_ties_rem.setAttribute('align', 'center');#}
-            {#td_ties_rem.setAttribute('valign', 'top');#}
-            {#td_ties_rem.setAttribute('width', '150');#}
-            {#let f_ties_rem_options = createCheckboxForm(js_vars.ties_rem_options[p_id],#}
-            {#    "Break tie with:", 3, "ties_rem");#}
-            {#td_ties_rem.appendChild(f_ties_rem_options);#}
-            {#tr.appendChild(td_ties_rem);#}
-            {#document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];#}
 
             tr.appendChild(td);
             tbdy.appendChild(tr);
