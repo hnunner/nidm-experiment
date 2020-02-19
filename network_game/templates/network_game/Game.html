@@ -25,29 +25,29 @@
     <!--            TABLE LAYOUT            -->
     <table width="1500">
         <tr>
-            <th width="700" align="center" valign="top" bgcolor="#EEEEEE">
-                <h2 align="center">This is your network!</h2>
+            <th width="1050" colspan="2" align="center" valign="top" bgcolor="#EEEEEE">
+                <h3 align="center">This is your network</h3>
                 <hr>
             </th>
-            <th width="350" align="center" valign="top" bgcolor="#DDDDDD">
-                <h2 align="center">Choose your action!</h2>
-                <hr>
-            </th>
-            <th width="350" align="center" valign="top" bgcolor="#EEEEEE">
+            <!-- th width="350" align="center" valign="top" bgcolor="#EEEEEE">
                 <h2 align="center">Watch your stats!</h2>
+                <hr>
+            </th -->
+            <th width="350" align="center" valign="top" bgcolor="#DDDDDD">
+                <h3 align="center">Choose your action</h3>
                 <hr>
             </th>
         </tr>
 
         <tr>
             <td width="700" align="center" valign="top" bgcolor="#EEEEEE">
-                <div id="nidm-network"></div>
-            </td>
-            <td width="350" align="center" valign="top" bgcolor="#DDDDDD">
-                <div id="form-ties"></div>
+                <div id="nidm_network"></div>
             </td>
             <td width="350" align="center" valign="top" bgcolor="#EEEEEE">
                 <div id="stats"></div>
+            </td>
+            <td width="350" align="center" valign="top" bgcolor="#DDDDDD">
+                <div id="form_ties"></div>
             </td>
         </tr>
     </table>
@@ -105,6 +105,11 @@
                                 color: '#888888',
                                 shape: 'star',
                                 size: size})
+                        } else {
+                            nodes.add({id: d,
+                                color: '#FFFFFF',
+                                shape: 'star',
+                                size: size})
                         }
                     // nodes of other players
                     } else {
@@ -123,12 +128,19 @@
                                 color: '#000000',
                                 shape: 'circle',
                                 size: size,
-                                font: '14px arial white'})
+                                font: '14px arial black'})
                         // recovered
                         } else if (ds === 3) {
                             nodes.add({id: d,
                                 label: d.toString(),
-                                color: '#AAAAAA',
+                                color: '#888888',
+                                shape: 'circle',
+                                size: size,
+                                font: '14px arial black'})
+                        } else {
+                            nodes.add({id: d,
+                                label: d.toString(),
+                                color: '#FFFFFF',
                                 shape: 'circle',
                                 size: size,
                                 font: '14px arial black'})
@@ -145,13 +157,16 @@
                     let ties_of_src = ties[src];
                     for (let i = 0; i < ties_of_src.length; i++) {
                         let dest = Number(ties_of_src[i]);
-                        edges.add({from: src, to: dest, color: '#000000', width: 1});
+                        edges.add({from: src,
+                            to: dest,
+                            color: '#000000',
+                            width: 1});
                     }
                 }
             }
 
             // create the network
-            let container = document.getElementById('nidm-network');
+            let container = document.getElementById('nidm_network');
             let data = {
                 nodes: nodes,
                 edges: edges
@@ -293,7 +308,7 @@
             tbl.appendChild(tbdy);
 
             // add the form inside the body
-            document.getElementById('form-ties').appendChild(tbl);
+            document.getElementById('form_ties').appendChild(tbl);
         }
 
         function createStats() {
