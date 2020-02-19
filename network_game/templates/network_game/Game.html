@@ -197,22 +197,23 @@
             // create a form
             let f = document.createElement("form");
 
-            let i = 1;
             // create checkboxes
-            for (let t in ties) {
+            for (let i = 1; i <= 24; i++) {
+
                 // checkbox id
-                let cb_id = name_prefix.concat(ties[t]);
+                let cb_id = name_prefix.concat(i.toString());
 
                 // create a single checkbox
                 let cb = document.createElement("input");
                 cb.type = "checkbox";
                 cb.id = cb_id;
                 cb.name = name_prefix;
+                cb.disabled = !ties.includes(i.toString());
                 cb.onchange = function setCbSelections() {
                     let cbs = document.getElementsByName(name_prefix);
                     let ties = [];
-                    for (let i = 0; i < cbs.length; i++) {
-                        let cb = cbs[i];
+                    for (let j = 0; j < cbs.length; j++) {
+                        let cb = cbs[j];
                         if (cb.type == "checkbox") {
                             if (cb.checked) {
                                 ties.push(cb.id.replace(name_prefix, ""));
@@ -227,20 +228,20 @@
                 lbl.style.marginLeft = '2px';
                 lbl.style.marginRight = '25px';
                 lbl.setAttribute("for", cb_id);
-                lbl.appendChild(document.createTextNode("   ".concat(ties[t])));
-
-                // create empty label as "whitespace hack"
-                let ws = document.createTextNode("\t");
+                lbl.appendChild(document.createTextNode("   ".concat(i.toString())));
+                let span = document.createElement('span');
+                if (!ties.includes(i.toString())) {
+                    span.style.color = "#CCCCCC";
+                }
+                span.appendChild(lbl);
 
                 // add all elements to the form
                 f.appendChild(cb);
-                f.appendChild(lbl);
+                f.appendChild(span);
 
                 if (i % 5 == 0) {
                     f.appendChild(document.createElement('br'));
                 }
-
-                i++;
             }
             return f;
         }
@@ -272,8 +273,6 @@
             td.appendChild(createCheckboxForm(js_vars.ties_form_req_options[p_id], "ties_form_req"));
             document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
 
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
 
 
 
@@ -288,8 +287,6 @@
             td.appendChild(createCheckboxForm(js_vars.ties_form_res_options[p_id], "ties_form_res"));
             document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];
 
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
 
 
 
@@ -304,8 +301,6 @@
             td.appendChild(createCheckboxForm(js_vars.ties_rem_options[p_id], "ties_rem"));
             document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];
 
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
 
             tr.appendChild(td);
             tbdy.appendChild(tr);
