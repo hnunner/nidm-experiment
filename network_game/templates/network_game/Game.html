@@ -128,7 +128,7 @@
                                 color: '#000000',
                                 shape: 'circle',
                                 size: size,
-                                font: '14px arial black'})
+                                font: '14px arial white'})
                         // recovered
                         } else if (ds === 3) {
                             nodes.add({id: d,
@@ -303,7 +303,7 @@
             td.setAttribute('width', '350');
 
             // tie creation requests
-            let title_tie_form_req =  document.createTextNode("Create tie with");
+            let title_tie_form_req =  document.createTextNode("Request tie with");
             let h_tie_form_req = document.createElement("H5");
             h_tie_form_req.appendChild(title_tie_form_req);
             td.appendChild(h_tie_form_req);
@@ -313,7 +313,7 @@
             td.appendChild(document.createElement('hr'));
 
             // tie creation responses
-            let title_tie_form_res =  document.createTextNode("Accept tie from");
+            let title_tie_form_res =  document.createTextNode("Accept tie request from");
             let h_tie_form_res = document.createElement("H5");
             h_tie_form_res.appendChild(title_tie_form_res);
             td.appendChild(h_tie_form_res);
@@ -340,7 +340,7 @@
             document.getElementById('form_ties').appendChild(tbl);
         }
 
-        function createStats() {
+        function createStats(x) {
 
             // create a table and general layout
             let tbl = document.createElement('table');
@@ -368,16 +368,22 @@
             td.appendChild(document.createElement('br'));
             // number of closed triads
             td.appendChild(createLeftTextDiv("Number of closed triads:"));
-            let closed_triads = 100;
+            let closed_triads = 24;
             td.appendChild(createRightNumberDiv(closed_triads));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // number of open triads
             td.appendChild(createLeftTextDiv("Number of open triads:"));
-            let open_triads = 15;
+            let open_triads = 4;
             td.appendChild(createRightNumberDiv(open_triads));
+            td.appendChild(document.createElement('br'));
+            td.appendChild(document.createElement('br'));
+            // proportion of open triads
+            td.appendChild(createLeftTextDiv("Proportion of open triads:"));
+            let prop_open_triads = 0.86;
+            td.appendChild(createRightNumberDiv(prop_open_triads));
             let p1 = document.createElement('p');
-            p1.style.margin = '84px';
+            p1.style.margin = '49px';
             td.appendChild(p1);
             td.appendChild(document.createElement('hr'));
 
@@ -389,19 +395,19 @@
             td.appendChild(document.createElement('hr'));
             // accepted requests
             td.appendChild(createLeftTextDiv("Requests accepted by others:"));
-            let acc_reqs = [2,3,4,5].join(",");
+            let acc_reqs = [8,24].join(",");
             td.appendChild(createRightNumberDiv(acc_reqs));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // declined requests
             td.appendChild(createLeftTextDiv("Requests declined by others:"));
-            let dec_reqs = [5,12,23].join(",");
+            let dec_reqs = [22].join(",");
             td.appendChild(createRightNumberDiv(dec_reqs));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // broken ties
             td.appendChild(createLeftTextDiv("Ties broken by others:"));
-            let broken_ties = [14].join(",");
+            let broken_ties = [5].join(",");
             td.appendChild(createRightNumberDiv(broken_ties));
             let p2 = document.createElement('p');
             p2.style.margin = '84px';
@@ -416,7 +422,7 @@
             td.appendChild(document.createElement('hr'));
             // last round
             td.appendChild(createLeftTextDiv("Last round:"));
-            let earn_last_round = Math.round(12.2).toFixed(2);
+            let earn_last_round = (3.47).toFixed(2);
             td.appendChild(createRightNumberDiv(earn_last_round));
             // last round details
             let span = document.createElement('span');
@@ -424,28 +430,28 @@
             span.appendChild(document.createElement('br'));
             span.appendChild(document.createElement('br'));
             span.appendChild(createLeftTextDiv("• Benefits of ties:"));
-            let ben_last_round = Math.round(16.2).toFixed(2);
+            let ben_last_round = (7.32).toFixed(2);
             span.appendChild(createRightNumberDiv(ben_last_round));
             span.appendChild(document.createElement('br'));
             span.appendChild(createLeftTextDiv("• Costs of ties:"));
-            let costs_last_round = Math.round(4.2).toFixed(2);
+            let costs_last_round = (3.85).toFixed(2);
             span.appendChild(createRightNumberDiv(costs_last_round));
             span.appendChild(document.createElement('br'));
             span.appendChild(createLeftTextDiv("• Disease penalty:"));
-            let dis_pen_last_round = Math.round(0.0).toFixed(2);
+            let dis_pen_last_round = (0.0).toFixed(2);
             span.appendChild(createRightNumberDiv(dis_pen_last_round));
             td.appendChild(span);
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // average per round
             td.appendChild(createLeftTextDiv("Average per round:"));
-            let res_average = Math.round(12.2).toFixed(2);
+            let res_average = (3.23).toFixed(2);
             td.appendChild(createRightNumberDiv(res_average));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // Total
             td.appendChild(createLeftTextDiv("Total:"));
-            let res_total = Math.round(12.2).toFixed(2);
+            let res_total = (17.83).toFixed(2);
             td.appendChild(createRightNumberDiv(res_total));
             td.appendChild(document.createElement('br'));
 
