@@ -20,7 +20,7 @@ Your app description
 
 class Constants(BaseConstants):
     name_in_url = 'network_game'
-    players_per_group = 24
+    players_per_group = 12
     num_rounds = 100
     gamma = 0.4
     tau = 3

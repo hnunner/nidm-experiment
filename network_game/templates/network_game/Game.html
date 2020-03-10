@@ -183,6 +183,16 @@
             return left_div;
         }
 
+        function createRightTextDiv(title) {
+            let right_div = document.createElement('div');
+            right_div.style.float = 'right';
+            right_div.style.width = '20%';
+            right_div.style.textAlign = 'right';
+            right_div.style.alignContent = 'right';
+            right_div.appendChild(document.createTextNode(title));
+            return right_div;
+        }
+
         function createRightNumberDiv(number) {
             let right_div = document.createElement('div');
             right_div.style.float = 'right';
@@ -210,7 +220,9 @@
             return right_div;
         }
 
-        function createCheckboxForm(ties, name_prefix) {
+        function createNetworkOverview(ties, name_prefix) {
+
+            let p_id = Number(js_vars.p_id);
 
             // create a table and general layout
             let tbl = document.createElement('table');
@@ -221,7 +233,7 @@
             let tr = document.createElement('tr');
 
             // create checkboxes
-            for (let i = 1; i <= 24; i++) {
+            for (let i = 1; i <= 12; i++) {
 
                 let td = document.createElement('td');
                 td.setAttribute('valign', 'center');
@@ -235,8 +247,91 @@
                 cb.type = "checkbox";
                 cb.id = cb_id;
                 cb.name = name_prefix;
-                cb.disabled = !ties.includes(i.toString());
+                cb.checked = js_vars.ties[p_id].includes(i.toString());
+
+                // create a label for the checkbox
+                let lbl = document.createElement("Label");
+                lbl.style.marginLeft = '2px';
+                lbl.style.marginRight = '25px';
+                lbl.style.textAlign = 'right';
+                lbl.style.alignContent = 'right';
+                lbl.style.alignItems = 'right';
+                lbl.setAttribute("for", cb_id);
+                lbl.appendChild(document.createTextNode(i.toString()));
+                let span = document.createElement('span');
+
+                if (name_prefix == "net_overview") {
+                    span.style.color = "#888888";
+                    cb.disabled = true;
+                } else {
+                    cb.disabled = false ;
+                    if (ties && ties.includes(i.toString())) {
+                        span.style.color = "#000000";
+                    } else {
+                        cb.style.visibility = "hidden";
+                        span.style.visibility = "hidden";
+                    }
+                }
+                span.style.alignItems = 'right';
+                span.style.textAlign = 'right';
+                span.style.alignContent = 'right';
+                span.appendChild(lbl);
+
+                // add all elements
+                td.appendChild(createLeftObjectDiv(cb));
+                td.appendChild(createRightObjectDiv(span));
+                tr.appendChild(td);
+
+                if (i % 4 == 0) {
+                    tbdy.appendChild(tr);
+                    tr = document.createElement('tr');
+                }
+            }
+            tbdy.appendChild(tr);
+
+            // final assembly
+            tbl.appendChild(tbdy);
+
+            return tbl;
+        }
+
+        function createCheckboxForm(ties_existing, ties_potential, name_prefix) {
+
+            let ties = ties_existing.concat(ties_potential);
+            ties.sort(function(a,b){return a-b});
+
+            // create a table and general layout
+            let tbl = document.createElement('table');
+            tbl.setAttribute('align', 'center');
+            tbl.setAttribute('border', '0');
+            tbl.setAttribute('width', '300');
+            let tbdy = document.createElement('tbody');
+            let tr = document.createElement('tr');
+
+            // create checkboxes
+            for (let i = 0; i < ties.length; i++) {
+
+                let td = document.createElement('td');
+                td.setAttribute('valign', 'center');
+                td.setAttribute('align', 'center');
+
+                // checkbox id
+                let cb_id = name_prefix.concat(ties[i]);
+
+                // create a single checkbox
+                let cb = document.createElement("input");
+                cb.type = "checkbox";
+                cb.id = cb_id;
+                cb.name = name_prefix;
+                cb.checked = !ties_existing.includes(ties[i]);
                 cb.onchange = function setCbSelections() {
+
+
+                    // TODO: This selection should be divided into the existing lists:
+                    // TODO: tie requests, responses, and removals!!! This is necessary to ensure that
+                    // TODO: we can log all necessary micro data.
+
+
                     let cbs = document.getElementsByName(name_prefix);
                     let ties = [];
                     for (let j = 0; j < cbs.length; j++) {
@@ -244,6 +339,7 @@
                         if (cb.type == "checkbox") {
                             if (cb.checked) {
                                 ties.push(cb.id.replace(name_prefix, ""));
+                                // console.log(ties);
                             }
                         }
                     }
@@ -258,11 +354,9 @@
                 lbl.style.alignContent = 'right';
                 lbl.style.alignItems = 'right';
                 lbl.setAttribute("for", cb_id);
-                lbl.appendChild(document.createTextNode(i.toString()));
+                lbl.appendChild(document.createTextNode(ties[i]));
                 let span = document.createElement('span');
-                if (!ties.includes(i.toString())) {
-                    span.style.color = "#CFCFCF";
-                }
+                span.style.color = "#000000";
                 span.style.alignItems = 'right';
                 span.style.textAlign = 'right';
                 span.style.alignContent = 'right';
@@ -274,7 +368,7 @@
                 td.appendChild(createRightObjectDiv(span));
                 tr.appendChild(td);
 
-                if (i % 5 == 0) {
+                if (i+1 % 4 == 0) {
                     tbdy.appendChild(tr);
                     tr = document.createElement('tr');
                 }
@@ -288,6 +382,8 @@
         }
 
         function createTieForm() {
+            let step_1 = false;
+
             let p_id = Number(js_vars.p_id);
 
             // create a table and general layout
@@ -302,34 +398,74 @@
             td.setAttribute('valign', 'top');
             td.setAttribute('width', '350');
 
-            // tie creation requests
-            let title_tie_form_req =  document.createTextNode("Request tie with");
-            let h_tie_form_req = document.createElement("H5");
-            h_tie_form_req.appendChild(title_tie_form_req);
-            td.appendChild(h_tie_form_req);
+            // step 1 (requests, removals)
+            let title_step_1 =  document.createTextNode("Create/break friendship with");
+            let h_step_1 = document.createElement("H5");
+            if (!step_1) {
+                h_step_1.style.opacity = "0.3";
+            }
+            h_step_1.appendChild(title_step_1);
+            td.appendChild(h_step_1);
             td.appendChild(document.createElement('hr'));
-            td.appendChild(createCheckboxForm(js_vars.ties_form_req_options[p_id], "ties_form_req"));
-            document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
+            let ties_step_1 = null;
+            if (step_1) {
+                ties_step_1 = js_vars.ties_form_req_options[p_id].concat(js_vars.ties_rem_options[p_id]);
+                ties_step_1.sort(function(a,b){return a-b});
+            }
+            let no_step_1 = createNetworkOverview(ties_step_1, "options_step_1");
+            td.appendChild(no_step_1);
+
+            //document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
+
+            let p1 = document.createElement('p');
+            p1.style.margin = '104px';
+            td.appendChild(p1);
             td.appendChild(document.createElement('hr'));
 
-            // tie creation responses
-            let title_tie_form_res =  document.createTextNode("Accept tie request from");
-            let h_tie_form_res = document.createElement("H5");
-            h_tie_form_res.appendChild(title_tie_form_res);
-            td.appendChild(h_tie_form_res);
+            // step 2 (responses)
+            let title_step_2 =  document.createTextNode("Accept friendship with");
+            let h_step_2 = document.createElement("H5");
+            if (step_1) {
+                h_step_2.style.opacity = "0.3";
+            }
+            h_step_2.appendChild(title_step_2);
+            td.appendChild(h_step_2);
             td.appendChild(document.createElement('hr'));
-            td.appendChild(createCheckboxForm(js_vars.ties_form_res_options[p_id], "ties_form_res"));
-            document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];
-            td.appendChild(document.createElement('hr'));
+            let ties_step_2 = null;
+            if (!step_1) {
+                ties_step_2 = js_vars.ties_form_res_options[p_id];
+            }
+            td.appendChild(createNetworkOverview(ties_step_2, "options_step_2"));
+            //document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
 
-            // tie removals
-            let title_tie_rem =  document.createTextNode("Remove tie with");
-            let h_tie_rem = document.createElement("H5");
-            h_tie_rem.appendChild(title_tie_rem);
-            td.appendChild(h_tie_rem);
-            td.appendChild(document.createElement('hr'));
-            td.appendChild(createCheckboxForm(js_vars.ties_rem_options[p_id], "ties_rem"));
-            document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];
+            {#// tie creation requests#}
+            {#let title_tie_form_req =  document.createTextNode("Request tie with");#}
+            {#let h_tie_form_req = document.createElement("H5");#}
+            {#h_tie_form_req.appendChild(title_tie_form_req);#}
+            {#td.appendChild(h_tie_form_req);#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {#td.appendChild(createCheckboxForm(js_vars.ties_form_req_options[p_id], "ties_form_req"));#}
+            {#document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {##}
+            {#// tie creation responses#}
+            {#let title_tie_form_res =  document.createTextNode("Accept tie request from");#}
+            {#let h_tie_form_res = document.createElement("H5");#}
+            {#h_tie_form_res.appendChild(title_tie_form_res);#}
+            {#td.appendChild(h_tie_form_res);#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {#td.appendChild(createCheckboxForm(js_vars.ties_form_res_options[p_id], "ties_form_res"));#}
+            {#document.getElementById("ties_form_res_options").value = js_vars.ties_form_res_options[p_id];#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {##}
+            {#// tie removals#}
+            {#let title_tie_rem =  document.createTextNode("Remove tie with");#}
+            {#let h_tie_rem = document.createElement("H5");#}
+            {#h_tie_rem.appendChild(title_tie_rem);#}
+            {#td.appendChild(h_tie_rem);#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {#td.appendChild(createCheckboxForm(js_vars.ties_rem_options[p_id], "ties_rem"));#}
+            {#document.getElementById("ties_rem_options").value = js_vars.ties_rem_options[p_id];#}
 
             // final assembly
             tr.appendChild(td);
@@ -341,6 +477,7 @@
         }
 
         function createStats(x) {
+            let p_id = Number(js_vars.p_id);
 
             // create a table and general layout
             let tbl = document.createElement('table');
@@ -355,64 +492,67 @@
             td.setAttribute('width', '350');
 
             // connections
-            let title_stats =  document.createTextNode("Connections");
+            let title_stats =  document.createTextNode("Friendships");
             let h_stats = document.createElement("H5");
             h_stats.appendChild(title_stats);
             td.appendChild(h_stats);
             td.appendChild(document.createElement('hr'));
+            // network checkbox list
+            td.appendChild(createNetworkOverview(js_vars.ties[p_id], "net_overview"));
+            td.appendChild(document.createElement('br'));
             // number of ties
-            td.appendChild(createLeftTextDiv("Number of ties:"));
-            let no_ties = 7;
+            td.appendChild(createLeftTextDiv("# of friends:"));
+            let no_ties = 4;
             td.appendChild(createRightNumberDiv(no_ties));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
-            // number of closed triads
-            td.appendChild(createLeftTextDiv("Number of closed triads:"));
-            let closed_triads = 24;
-            td.appendChild(createRightNumberDiv(closed_triads));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
-            // number of open triads
-            td.appendChild(createLeftTextDiv("Number of open triads:"));
-            let open_triads = 4;
-            td.appendChild(createRightNumberDiv(open_triads));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
+            {#// number of closed triads#}
+            {#td.appendChild(createLeftTextDiv("Number of closed triads:"));#}
+            {#let closed_triads = 24;#}
+            {#td.appendChild(createRightNumberDiv(closed_triads));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#// number of open triads#}
+            {#td.appendChild(createLeftTextDiv("Number of open triads:"));#}
+            {#let open_triads = 4;#}
+            {#td.appendChild(createRightNumberDiv(open_triads));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#td.appendChild(document.createElement('br'));#}
             // proportion of open triads
-            td.appendChild(createLeftTextDiv("Proportion of open triads:"));
-            let prop_open_triads = 0.86;
-            td.appendChild(createRightNumberDiv(prop_open_triads));
+            td.appendChild(createLeftTextDiv("Friends being friends:"));
+            let friends_being_friends = 0.33;
+            td.appendChild(createRightNumberDiv(friends_being_friends));
             let p1 = document.createElement('p');
             p1.style.margin = '49px';
             td.appendChild(p1);
             td.appendChild(document.createElement('hr'));
 
             // changes to the last round
-            let title_changes =  document.createTextNode("Changes to the last round");
-            let h_changes = document.createElement("H5");
-            h_changes.appendChild(title_changes);
-            td.appendChild(h_changes);
-            td.appendChild(document.createElement('hr'));
-            // accepted requests
-            td.appendChild(createLeftTextDiv("Requests accepted by others:"));
-            let acc_reqs = [8,24].join(",");
-            td.appendChild(createRightNumberDiv(acc_reqs));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
-            // declined requests
-            td.appendChild(createLeftTextDiv("Requests declined by others:"));
-            let dec_reqs = [22].join(",");
-            td.appendChild(createRightNumberDiv(dec_reqs));
-            td.appendChild(document.createElement('br'));
-            td.appendChild(document.createElement('br'));
-            // broken ties
-            td.appendChild(createLeftTextDiv("Ties broken by others:"));
-            let broken_ties = [5].join(",");
-            td.appendChild(createRightNumberDiv(broken_ties));
-            let p2 = document.createElement('p');
-            p2.style.margin = '84px';
-            td.appendChild(p2);
-            td.appendChild(document.createElement('hr'));
+            {#let title_changes =  document.createTextNode("Changes to the last round");#}
+            {#let h_changes = document.createElement("H5");#}
+            {#h_changes.appendChild(title_changes);#}
+            {#td.appendChild(h_changes);#}
+            {#td.appendChild(document.createElement('hr'));#}
+            {#// accepted requests#}
+            {#td.appendChild(createLeftTextDiv("Requests accepted by others:"));#}
+            {#let acc_reqs = [8,24].join(",");#}
+            {#td.appendChild(createRightNumberDiv(acc_reqs));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#// declined requests#}
+            {#td.appendChild(createLeftTextDiv("Requests declined by others:"));#}
+            {#let dec_reqs = [22].join(",");#}
+            {#td.appendChild(createRightNumberDiv(dec_reqs));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#td.appendChild(document.createElement('br'));#}
+            {#// broken ties#}
+            {#td.appendChild(createLeftTextDiv("Ties broken by others:"));#}
+            {#let broken_ties = [5].join(",");#}
+            {#td.appendChild(createRightNumberDiv(broken_ties));#}
+            {#let p2 = document.createElement('p');#}
+            {#p2.style.margin = '84px';#}
+            {#td.appendChild(p2);#}
+            {#td.appendChild(document.createElement('hr'));#}
 
             // earnings
             let title_earnings =  document.createTextNode("Earnings");
@@ -422,19 +562,19 @@
             td.appendChild(document.createElement('hr'));
             // last round
             td.appendChild(createLeftTextDiv("Last round:"));
-            let earn_last_round = (3.64).toFixed(2);
+            let earn_last_round = (1.60).toFixed(2);
             td.appendChild(createRightNumberDiv(earn_last_round));
             // last round details
             let span = document.createElement('span');
             span.style.fontSize = "12px";
             span.appendChild(document.createElement('br'));
             span.appendChild(document.createElement('br'));
-            span.appendChild(createLeftTextDiv("• Net benefit of social ties:"));
-            let ben_last_round = (3.15).toFixed(2);
+            span.appendChild(createLeftTextDiv("• # of friends:"));
+            let ben_last_round = (1.60).toFixed(2);
             span.appendChild(createRightNumberDiv(ben_last_round));
             span.appendChild(document.createElement('br'));
-            span.appendChild(createLeftTextDiv("• Benefit of triads:"));
-            let costs_last_round = (0.49).toFixed(2);
+            span.appendChild(createLeftTextDiv("• Friends being friends:"));
+            let costs_last_round = (0.00).toFixed(2);
             span.appendChild(createRightNumberDiv(costs_last_round));
             span.appendChild(document.createElement('br'));
             span.appendChild(createLeftTextDiv("• Disease penalty:"));
@@ -445,13 +585,13 @@
             td.appendChild(document.createElement('br'));
             // average per round
             td.appendChild(createLeftTextDiv("Average per round:"));
-            let res_average = (3.23).toFixed(2);
+            let res_average = (1.83).toFixed(2);
             td.appendChild(createRightNumberDiv(res_average));
             td.appendChild(document.createElement('br'));
             td.appendChild(document.createElement('br'));
             // Total
             td.appendChild(createLeftTextDiv("Total:"));
-            let res_total = (17.83).toFixed(2);
+            let res_total = (11.69).toFixed(2);
             td.appendChild(createRightNumberDiv(res_total));
             td.appendChild(document.createElement('br'));
 
