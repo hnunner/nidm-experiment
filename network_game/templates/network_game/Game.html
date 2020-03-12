@@ -382,7 +382,7 @@
         }
 
         function createTieForm() {
-            let step_1 = false;
+            let step_1 = true;
 
             let p_id = Number(js_vars.p_id);
 
@@ -401,17 +401,17 @@
             // step 1 (requests, removals)
             let title_step_1 =  document.createTextNode("Create/break friendship with");
             let h_step_1 = document.createElement("H5");
-            if (!step_1) {
-                h_step_1.style.opacity = "0.3";
-            }
+            // if (!step_1) {
+            //    h_step_1.style.opacity = "0.3";
+            // }
             h_step_1.appendChild(title_step_1);
             td.appendChild(h_step_1);
             td.appendChild(document.createElement('hr'));
             let ties_step_1 = null;
-            if (step_1) {
+            // if (step_1) {
                 ties_step_1 = js_vars.ties_form_req_options[p_id].concat(js_vars.ties_rem_options[p_id]);
                 ties_step_1.sort(function(a,b){return a-b});
-            }
+            // }
             let no_step_1 = createNetworkOverview(ties_step_1, "options_step_1");
             td.appendChild(no_step_1);
 
@@ -425,16 +425,16 @@
             // step 2 (responses)
             let title_step_2 =  document.createTextNode("Accept friendship with");
             let h_step_2 = document.createElement("H5");
-            if (step_1) {
-                h_step_2.style.opacity = "0.3";
-            }
+            // if (step_1) {
+            //    h_step_2.style.opacity = "0.3";
+            // }
             h_step_2.appendChild(title_step_2);
             td.appendChild(h_step_2);
             td.appendChild(document.createElement('hr'));
             let ties_step_2 = null;
-            if (!step_1) {
+            // if (!step_1) {
                 ties_step_2 = js_vars.ties_form_res_options[p_id];
-            }
+            // }
             td.appendChild(createNetworkOverview(ties_step_2, "options_step_2"));
             //document.getElementById("ties_form_req_options").value = js_vars.ties_form_req_options[p_id];
 
