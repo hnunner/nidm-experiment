@@ -399,7 +399,7 @@
             td.setAttribute('width', '350');
 
             // step 1 (requests, removals)
-            let title_step_1 =  document.createTextNode("Create/break friendship with");
+            let title_step_1 =  document.createTextNode("Create/break tie with");
             let h_step_1 = document.createElement("H5");
             // if (!step_1) {
             //    h_step_1.style.opacity = "0.3";
@@ -423,7 +423,7 @@
             td.appendChild(document.createElement('hr'));
 
             // step 2 (responses)
-            let title_step_2 =  document.createTextNode("Accept friendship with");
+            let title_step_2 =  document.createTextNode("Accept tie request from");
             let h_step_2 = document.createElement("H5");
             // if (step_1) {
             //    h_step_2.style.opacity = "0.3";
@@ -492,7 +492,7 @@
             td.setAttribute('width', '350');
 
             // connections
-            let title_stats =  document.createTextNode("Friendships");
+            let title_stats =  document.createTextNode("Ties");
             let h_stats = document.createElement("H5");
             h_stats.appendChild(title_stats);
             td.appendChild(h_stats);
@@ -501,7 +501,7 @@
             td.appendChild(createNetworkOverview(js_vars.ties[p_id], "net_overview"));
             td.appendChild(document.createElement('br'));
             // number of ties
-            td.appendChild(createLeftTextDiv("# of friends:"));
+            td.appendChild(createLeftTextDiv("# of direct ties:"));
             let no_ties = 4;
             td.appendChild(createRightNumberDiv(no_ties));
             td.appendChild(document.createElement('br'));
@@ -519,7 +519,7 @@
             {#td.appendChild(document.createElement('br'));#}
             {#td.appendChild(document.createElement('br'));#}
             // proportion of open triads
-            td.appendChild(createLeftTextDiv("Friends being friends:"));
+            td.appendChild(createLeftTextDiv("Proportion of ties between your direct ties:"));
             let friends_being_friends = 0.33;
             td.appendChild(createRightNumberDiv(friends_being_friends));
             let p1 = document.createElement('p');
@@ -569,11 +569,11 @@
             span.style.fontSize = "12px";
             span.appendChild(document.createElement('br'));
             span.appendChild(document.createElement('br'));
-            span.appendChild(createLeftTextDiv("• # of friends:"));
+            span.appendChild(createLeftTextDiv("• # of direct ties:"));
             let ben_last_round = (1.60).toFixed(2);
             span.appendChild(createRightNumberDiv(ben_last_round));
             span.appendChild(document.createElement('br'));
-            span.appendChild(createLeftTextDiv("• Friends being friends:"));
+            span.appendChild(createLeftTextDiv("• Proportion of ties between your direct ties:"));
             let costs_last_round = (0.00).toFixed(2);
             span.appendChild(createRightNumberDiv(costs_last_round));
             span.appendChild(document.createElement('br'));

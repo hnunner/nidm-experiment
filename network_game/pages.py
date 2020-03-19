@@ -57,43 +57,55 @@ class Game(Page):
 
             # disease_states[player.id_in_group] = p.disease_state
 
+            # if player.id_in_group == 1:
+            #     ties[player.id_in_group] = "3 8 9 12".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 2:
+            #     ties[player.id_in_group] = "5 8 10 11".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 3:
+            #     ties[player.id_in_group] = "4 9 12".split()
+            #     disease_states[player.id_in_group] = 2
+            # elif player.id_in_group == 4:
+            #     ties[player.id_in_group] = "5 7 11".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 5:
+            #     ties[player.id_in_group] = "7 11".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 6:
+            #     ties[player.id_in_group] = "7 9".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 7:
+            #     ties[player.id_in_group] = "11".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 8:
+            #     ties[player.id_in_group] = "10".split()
+            #     disease_states[player.id_in_group] = 3
+            # elif player.id_in_group == 9:
+            #     ties[player.id_in_group] = "12".split()
+            #     disease_states[player.id_in_group] = 3
+            # elif player.id_in_group == 10:
+            #     ties[player.id_in_group] = "12".split()
+            #     disease_states[player.id_in_group] = 1
+            # elif player.id_in_group == 11:
+            #     ties[player.id_in_group] = "".split()
+            #     disease_states[player.id_in_group] = 2
+            # elif player.id_in_group == 12:
+            #     ties[player.id_in_group] = "".split()
+            #     disease_states[player.id_in_group] = 3
+
             if player.id_in_group == 1:
-                ties[player.id_in_group] = "3 8 9 12".split()
+                ties[player.id_in_group] = "2 3 4".split()
                 disease_states[player.id_in_group] = 1
             elif player.id_in_group == 2:
-                ties[player.id_in_group] = "5 8 10 11".split()
+                ties[player.id_in_group] = "3 4".split()
                 disease_states[player.id_in_group] = 1
             elif player.id_in_group == 3:
-                ties[player.id_in_group] = "4 9 12".split()
-                disease_states[player.id_in_group] = 2
+                ties[player.id_in_group] = "4".split()
+                disease_states[player.id_in_group] = 1
             elif player.id_in_group == 4:
-                ties[player.id_in_group] = "5 7 11".split()
-                disease_states[player.id_in_group] = 1
-            elif player.id_in_group == 5:
-                ties[player.id_in_group] = "7 11".split()
-                disease_states[player.id_in_group] = 1
-            elif player.id_in_group == 6:
-                ties[player.id_in_group] = "7 9".split()
-                disease_states[player.id_in_group] = 1
-            elif player.id_in_group == 7:
-                ties[player.id_in_group] = "11".split()
-                disease_states[player.id_in_group] = 1
-            elif player.id_in_group == 8:
-                ties[player.id_in_group] = "10".split()
-                disease_states[player.id_in_group] = 3
-            elif player.id_in_group == 9:
-                ties[player.id_in_group] = "12".split()
-                disease_states[player.id_in_group] = 3
-            elif player.id_in_group == 10:
-                ties[player.id_in_group] = "12".split()
-                disease_states[player.id_in_group] = 1
-            elif player.id_in_group == 11:
                 ties[player.id_in_group] = "".split()
-                disease_states[player.id_in_group] = 2
-            elif player.id_in_group == 12:
-                ties[player.id_in_group] = "".split()
-                disease_states[player.id_in_group] = 3
-
+                disease_states[player.id_in_group] = 1
 
             # if not p.ties_form_req_options:
             #     ties_form_req_options[player.id_in_group] = ""
